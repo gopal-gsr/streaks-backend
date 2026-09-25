@@ -5,6 +5,11 @@ Habit-streak backend for an iOS app. The client displays; this service decides.
 **Source of truth:** `docs/BACKEND_DESIGN.md`. Read the relevant section before changing behaviour,
 and update it when an implementation deviates — a stale spec is worse than none.
 
+**Product context, not backend spec:** `reference/` — the product brief and spec for the iOS app
+this backend serves (`EMBER_PRODUCT_BRIEF.md`, `APP_SPEC.md`), the JD it's architected against
+(`JD_JPMC_iOS_Role.md`), and `PROJECT_MEMORY.md` (cross-session status/working notes). See
+`reference/README.md`.
+
 ## Stack
 
 Java 21 · Spring Boot 4.1.1 · Gradle (Kotlin DSL) · PostgreSQL 16 (not wired yet)
@@ -22,6 +27,20 @@ no Spring, no JPA, no clock. That is what keeps the streak rules testable in mil
 - `streak/engine/` — pure rules. `StreakEngine.apply(state, event) → outcome`
 - `streak/engine/policy/` — the tunable numbers: freezes, repair window, day classification
 - `common/time/` — **all** timezone maths, in `UserClock`. Nowhere else.
+
+## Git workflow
+
+Gitflow, enforced by GitHub branch protection — not just convention. `main` and `develop` reject
+direct pushes and force-pushes; every change lands via PR.
+
+- `develop` — integration branch. All work branches off it and merges back into it via PR.
+- `feature/*`, `fix/*`, `docs/*` — branch off `develop`, PR back into `develop`.
+- `release/*` — branches off `develop` to stabilize a release, PRs into **both** `main` and `develop`.
+- `hotfix/*` — branches off `main` for something already shipped, PRs into **both** `main` and `develop`.
+
+Full naming, commit-message, and pre-push rules live in the `git-flow` skill
+(`.claude/skills/git-flow/SKILL.md`). Run it before starting work, before committing, and before
+any push.
 
 ## Rules that must not be broken
 
