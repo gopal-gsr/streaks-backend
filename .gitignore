@@ -42,5 +42,8 @@ out/
 ### macOS ###
 .DS_Store
 
+### Local secrets (DB password etc.), see .env.example ###
+.env
+
 ### Local reference material, not tracked ###
 reference/
