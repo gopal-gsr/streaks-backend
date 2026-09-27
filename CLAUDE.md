@@ -12,12 +12,16 @@ this backend serves (`EMBER_PRODUCT_BRIEF.md`, `APP_SPEC.md`), the JD it's archi
 
 ## Stack
 
-Java 21 · Spring Boot 4.1.1 · Gradle (Kotlin DSL) · PostgreSQL 16 (not wired yet)
+Java 21 · Spring Boot 4.1.1 · Gradle (Kotlin DSL) · PostgreSQL 16 · Flyway
 
 ```bash
-./gradlew test          # whole suite, ~2s
+./gradlew test          # whole suite; the Spring tests need Postgres up
 ./gradlew compileJava
+./gradlew bootRun       # then: curl localhost:8080/actuator/health
 ```
+
+Local DB credentials go in `.env` (gitignored, imported by `application.properties`); copy
+`.env.example`. CI (`.github/workflows/ci.yml`) runs `./gradlew test` against a Postgres 16 service.
 
 ## Layering
 
@@ -73,7 +77,7 @@ any push.
 
 ## Where the build is
 
-Build order (§19): steps **2 and 3 done** — `StreakEngine` and `UserClock`, 36 tests green.
+Build order (§19): steps **1, 2 and 3 done** — skeleton (Postgres, Flyway V1 identity tables,
+`/actuator/health`, CI), `StreakEngine`, `UserClock`.
 
-Next: step 1 proper (Postgres, Flyway, `/health`, CI), then 4 (webhook spike) and 5 (APNs spike).
-Nothing is wired to Spring yet; `spring-boot-starter` and its test starter are the only dependencies.
+Next: 4 (webhook spike) and 5 (APNs spike).
